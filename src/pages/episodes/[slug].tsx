@@ -28,6 +28,12 @@ type EpisodeProps = {
 };
 
 export default function Episode({ episode }: EpisodeProps) {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <p>Carregando...</p>
+  }
+
   return (
    <div className={styles.episode}>
         <title>{episode.title} | Podcastr</title>
@@ -64,10 +70,11 @@ export default function Episode({ episode }: EpisodeProps) {
     </div>
   )
 }
-
+//
 export const getStaticPaths: GetStaticPaths = async () =>  {
   return {
-    paths: [],
+    paths: 
+    [],
     fallback: 'blocking'
   }
 }
