@@ -20,4 +20,4 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp
-//Parei 12min
+//Parei 20min
