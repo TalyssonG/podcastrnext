@@ -1,7 +1,8 @@
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import Image from 'next/image';
-import  Link  from 'next/link';
+import Link from 'next/link';
+import Head from 'next/head';
 
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router'
@@ -11,6 +12,7 @@ import { convertDurationToTimeString } from '../../utils/convertDurationToTimeSt
 import styles from './episode.module.scss';
 import React from 'react';
 import { usePlayer } from '../../contexts/PlayerContext';
+
 
 
 type Episode = {
@@ -33,9 +35,11 @@ export default function Episode({ episode }: EpisodeProps) {
   const { play } = usePlayer();
 
   return (
-   <div className={styles.episode}>
+    <div className={styles.episode}>
+      <Head>
         <title>{episode.title} | Podcastr</title>
-      
+      </Head>
+
 
       <div className={styles.thumbnailContainer}>
         <Link href="/">
@@ -61,15 +65,15 @@ export default function Episode({ episode }: EpisodeProps) {
         <span>{episode.durationAsString}</span>
       </header>
 
-      <div 
-        className={styles.description} 
+      <div
+        className={styles.description}
         dangerouslySetInnerHTML={{ __html: episode.description }}
       />
     </div>
   )
 }
 //
-export const getStaticPaths: GetStaticPaths = async () =>  {
+export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await api.get('episodes', {
     params: {
       _limit: 2,
@@ -78,14 +82,14 @@ export const getStaticPaths: GetStaticPaths = async () =>  {
     }
   })
 
-    const paths = data.map(episode => {
-      return {
-          params: {
-            slug: episode.id
-          }
-        
+  const paths = data.map(episode => {
+    return {
+      params: {
+        slug: episode.id
       }
-    })
+
+    }
+  })
 
   return {
     paths,
@@ -99,14 +103,14 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const { data } = await api.get(`/episodes/${slug}`)
 
   const episode = {
-      id: data.id,
-      title: data.title,
-      thumbnail: data.thumbnail,
-      members: data.members,
-      publishedAt: format(parseISO(data.published_at), 'd MMM yy', { locale: ptBR }),
-      duration: Number(data.file.duration),
-      durationAsString: convertDurationToTimeString(Number(data.file.duration)),
-      url: data.file.url,
+    id: data.id,
+    title: data.title,
+    thumbnail: data.thumbnail,
+    members: data.members,
+    publishedAt: format(parseISO(data.published_at), 'd MMM yy', { locale: ptBR }),
+    duration: Number(data.file.duration),
+    durationAsString: convertDurationToTimeString(Number(data.file.duration)),
+    url: data.file.url,
   };
 
   return {
